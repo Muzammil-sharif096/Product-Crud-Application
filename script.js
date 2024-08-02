@@ -5,39 +5,36 @@ var Pcondition = document.querySelector("#Pcondition");
 var table = document.getElementById('itemTable');
 var btn1 = document.querySelector("#btn1");
 var clr = document.querySelector("#clr");
-var div = document.querySelector("#div");
+var errorMessageDiv = document.querySelector("#error-message");
 
+Pname.addEventListener("input", downchange);
 
-
-
-
-Pname.addEventListener("keydown", downchange);
 function downchange() {
     var inpVal = Pname.value.trim();
     var firstLetter = inpVal[0];
-    if (firstLetter !== firstLetter?.toUpperCase()) {
-        div.innerHTML = "first letter must be UpperCase";
-        div.style.color = "red";
+
+    if (firstLetter && firstLetter !== firstLetter.toUpperCase()) {
+        errorMessageDiv.innerHTML = "First letter must be uppercase.";
     } else {
-        div.innerHTML = "";
+        errorMessageDiv.innerHTML = ""; // Clear the error message
     }
 }
-
-
 
 btn1.addEventListener("click", addItem);
 
 function addItem() {
-    if (Pname.value == "" && Pprice.value == "") {
+    if (Pname.value == "" || Pprice.value == "") {
         alert("Fill all inputs");
         return;
     }
+
     var obj = {
         Pname: Pname.value,
         Pprice: Pprice.value,
         Pcatagory: Pcatagory.value,
         Pcondition: Pcondition.value,
     };
+
     var data = localStorage.getItem("Products") ? JSON.parse(localStorage.getItem("Products")) : [];
     data.push(obj);
     localStorage.setItem("Products", JSON.stringify(data));
@@ -46,24 +43,23 @@ function addItem() {
     showValue();
 }
 
-
-
-
 function showValue() {
     table.innerHTML = '<tr><th>Index</th><th>Name</th><th>Price</th><th>Category</th><th>Condition</th><th>Actions</th></tr>';
     var data = JSON.parse(localStorage.getItem('Products'));
-    if (data == null) {
-    } else {
-        data.map((ele, index) => {
-            var newclass;
-            if (ele.Pcondition == 'Excellent') {
-                newclass = 'bg-green-500';
-            } else if (ele.Pcondition == 'Good') {
-                newclass = 'bg-yellow-500';
-            } else {
-                newclass = 'bg-red-500';
-            }
-            table.innerHTML += `<tr>
+
+    if (data == null) return;
+
+    data.map((ele, index) => {
+        var newclass;
+        if (ele.Pcondition == 'Excellent') {
+            newclass = 'bg-green-500';
+        } else if (ele.Pcondition == 'Good') {
+            newclass = 'bg-yellow-500';
+        } else {
+            newclass = 'bg-red-500';
+        }
+
+        table.innerHTML += `<tr>
             <td>${index}</td>
             <td>${ele.Pname}</td>
             <td>${ele.Pprice}</td>
@@ -74,18 +70,14 @@ function showValue() {
                 <button onclick='handledel(${index})'><i class="fa-solid fa-trash text-red-700 ml-2"></i></button> 
             </td>
         </tr>`;
-        });
-    }
+    });
 }
-
 
 showValue();
 
 function handledel(i) {
-    console.log(i, "test here the index");
     var data = JSON.parse(localStorage.getItem('Products'));
     data.splice(i, 1);
-    console.log(data, "test here code ");
     localStorage.setItem('Products', JSON.stringify(data));
     showValue();
 }
@@ -122,7 +114,7 @@ function handleUpdate() {
 var showinp = document.querySelector("#showinp");
 
 function showclk() {
-    var searchTerm = showinp.value
+    var searchTerm = showinp.value;
     var data = JSON.parse(localStorage.getItem("Products"));
 
     var filteredData = data.filter((ele) => {
@@ -154,26 +146,9 @@ function showclk() {
     });
 }
 
-
-
-
-
-
 function handleclr() {
     localStorage.removeItem('Products');
     table.innerHTML = "";
-    showinp.value = ""
-    showValue()
+    showinp.value = "";
+    showValue();
 }
-
-
-
-
-
-
-
-
-
-
-
-
