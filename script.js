@@ -16,7 +16,7 @@ function downchange() {
     if (firstLetter && firstLetter !== firstLetter.toUpperCase()) {
         errorMessageDiv.innerHTML = "First letter must be uppercase.";
     } else {
-        errorMessageDiv.innerHTML = ""; // Clear the error message
+        errorMessageDiv.innerHTML = "";
     }
 }
 
